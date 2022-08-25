@@ -1,0 +1,35 @@
+# Stack
+
+A stack is a data structure that follows the principle of Last In First Out (LIFO) principle.
+
+## Example Use Cases
+
+Stack of books, palindrome, back button for web navigation (which page I was previously on, and so on).
+
+## Stack Methods
+
+1. push
+2. pop
+3. peek
+4. length / size
+
+JavaScript already has these methods, so we can implement stacks using arrays in JS / TS.
+
+## Palindrome TypeScript Example
+
+```typescript
+function isPalindrome(word: string): boolean {
+	let letters: string[] = [...word]; // this is our stack, put letters of word into stack
+	let reverseWord: string = "";
+	
+	// pop off the stack in reverse order, and store to reverseWord
+	for (const letter of word) {
+		reverseWord += letters.pop(); 
+	}
+
+	return word === reverseWord;
+}
+```
+
+## TODO
+Implement a stack in TypeScript (not needed irl because array data structure has the stack methods, but useful to understand under the hood)

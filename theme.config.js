@@ -1,12 +1,12 @@
 export default {
-  github: 'https://github.com/shuding/nextra',
-  docsRepositoryBase: 'https://github.com/shuding/nextra/blob/master',
-  titleSuffix: ' – Nextra',
+  github: 'https://github.com/KarlaDampilag/dsa-cheatsheet',
+  docsRepositoryBase: 'https://github.com/KarlaDampilag/dsa-cheatsheet/blob/master',
+  titleSuffix: ' – DSA Cheat Sheet',
   logo: (
     <>
-      <span className="mr-2 font-extrabold hidden md:inline">Nextra</span>
+      <span className="mr-2 font-extrabold hidden md:inline">DSA Cheat Sheet</span>
       <span className="text-gray-600 font-normal hidden md:inline">
-        The Next.js Static Site Generator
+        My personal knowledge bank
       </span>
     </>
   ),
@@ -16,8 +16,8 @@ export default {
       <meta name="theme-color" content="#ffffff" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="Content-Language" content="en" />
-      <meta name="description" content="Nextra: the Next.js site builder" />
-      <meta name="og:description" content="Nextra: the Next.js site builder" />
+      <meta name="description" content="DSA Cheat Sheet: My personal knowledge bank by Karla Dampilag" />
+      <meta name="og:description" content="DSA Cheat Sheet: My personal knowledge bank by Karla Dampilag" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:image" content="https://nextra.vercel.app/og.png" />
       <meta name="twitter:site:domain" content="nextra.vercel.app" />
@@ -60,8 +60,8 @@ export default {
   search: true,
   prevLinks: true,
   nextLinks: true,
-  footer: true,
-  footerEditLink: 'Edit this page on GitHub',
-  footerText: <>MIT {new Date().getFullYear()} © Nextra.</>,
+  footer: false,
+  // footerEditLink: 'Edit this page on GitHub',
+  // footerText: <>MIT {new Date().getFullYear()} © Nextra.</>,
   unstable_faviconGlyph: '👋',
 }
