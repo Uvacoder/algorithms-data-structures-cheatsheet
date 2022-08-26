@@ -4,18 +4,20 @@ A stack is a data structure that follows the principle of Last In First Out (LIF
 
 ## Example Use Cases
 
-Stack of books, palindrome, back button for web navigation (which page I was previously on, and so on).
+Stack of books, reversing an order (e.g. palindrome problem), back button for web browser, any page navigation (which page I was previously on, and so on), undoing commands.
 
 ## Stack Methods
 
-1. push
-2. pop
-3. peek
+1. push - adds an item to the "top" or end of the stack.
+2. pop - removes the last item from the stack and returns that item.
+3. peek - returns the last item without removing it from the stack.
 4. length / size
 
-JavaScript already has these methods, so we can implement stacks using arrays in JS / TS.
+JavaScript already has these methods, so we can implement stacks using arrays in JS / TS, except for peek(), which you have to do manually by doing `stack[stack.length - 1]`
 
 ## Palindrome TypeScript Example
+
+A palindrome is a word that reads the same backward as it is forward. Examples are "madam" and "racecar".
 
 ```typescript
 function isPalindrome(word: string): boolean {
@@ -31,5 +33,61 @@ function isPalindrome(word: string): boolean {
 }
 ```
 
-## TODO
-Implement a stack in TypeScript (not needed irl because array data structure has the stack methods, but useful to understand under the hood)
+Depending on the problem requirements, the above function can be modified to ignore spaces in order to check for phrases, and not just words, e.g. "nurses run".
+
+## Palindrome Implementation in TypeScript
+
+Not needed irl because the array data structure has the stack methods, but it's useful to understand under the hood.
+
+```typescript
+interface IStack<T> {
+	push(item: T): void;
+	pop(): T | undefined;
+	peek(): T | undefined;
+	size(): number;
+}
+
+class Stack<T> implements IStack<T> {
+	private items: T[] = [];
+
+	constructor(...params: T[]) {
+		this.items = [...params];
+	}
+
+	size(): number {
+		return this.items.length;
+	}
+
+	push(item: T): void {
+		this.items.push(item);
+	}
+
+	pop(item: T): T | undefined {
+		if (this.size() === 0) {
+			return undefined;
+		}
+		return this.items.pop();
+	}
+
+	peek(): T | undefined {
+		if (this.size() === 0) {
+			return undefined;
+		}
+		return this.items[this.size() - 1];
+	}
+}
+```
+
+Using the Stack class above, we can create a new stack using:
+
+```typescript
+const stack = new Stack<T>();
+```
+
+and if we want to use this new Stack class in our palindrome solution, then the `letters` variable can be declared and instantiated using:
+
+```typescript
+let letters = new Stack<string>(...word);
+```
+
+the usage of the stack methods will remain the same.
