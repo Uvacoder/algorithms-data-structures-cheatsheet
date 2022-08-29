@@ -35,6 +35,16 @@ function isPalindrome(word: string): boolean {
 
 Depending on the problem requirements, the above function can be modified to ignore spaces in order to check for phrases, and not just words, e.g. "nurses run".
 
+It can also be modified to ignore cases so that "Madam" will also return true.
+
+Both of these cases can even be passed as a parameter to the `isPalindrome` function:
+
+```typescript
+function isPalindrome(word: string, ignoreCase?: boolean, ignoreSpaces?: boolean) {
+	...
+}
+```
+
 ## Stack Data Structure Implementation in TypeScript
 
 Not needed irl because the array data structure has the stack methods, but it's useful to understand under the hood.
@@ -62,7 +72,7 @@ class Stack<T> implements IStack<T> {
 		this.items.push(item);
 	}
 
-	pop(item: T): T | undefined {
+	pop(): T | undefined {
 		if (this.size() === 0) {
 			return undefined;
 		}
