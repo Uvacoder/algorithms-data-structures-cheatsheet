@@ -8,13 +8,13 @@ Eliminating duplicates, checking the presence of an item in a collection, compar
 
 ## Set Methods
 
-1. has - checks for the presence of an element.
-2. add - inserts a new element if the specified value isn't already in the set. Returns the set object with the added value.
-3. delete - removes the specified element. Returns a boolean that asserts whether it was successfully removed or not.
-4. values - an iteration method that returns all elements in the set.
-5. clear - removes all elements from the set.
+1. has(item) - checks for the presence of an element.
+2. add(item) - inserts a new element if the specified value isn't already in the set. Returns the set object with the added value.
+3. delete(item) - removes the specified element. Returns a boolean that asserts whether it was successfully removed or not.
+4. values() - an iteration method that returns all elements in the set, ordered by insertion.
+5. clear() - removes all elements from the set.
 6. size - returns the number of values in the set.
-7. forEach - an iteration method that executes the provided function once for each value in the set.
+7. forEach(callbackfn) - an iteration method that executes the provided function once for each value in the set.
 
 JavaScript ES6 (ES2015) has a built-in Set object, which contains all of the methods above (set.size in ES6 is a number property and not a method).
 
