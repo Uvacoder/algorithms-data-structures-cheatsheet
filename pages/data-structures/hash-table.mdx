@@ -1,0 +1,57 @@
+# Hash Table
+
+A hash table is used to create a list of key-value pairs. With a hash table, you can retrieve the elements in the collection by specifying a key value.
+
+Hash tables are commonly used because of its fast search, insert, and delete operations. The average time complexity for these operations is constant O(1), which is very fast compared to the typical linear time complexity O(n).
+
+The use of key-value pairs is what makes hash tables faster compared to a regular array. When looking for a value in an array, you'd normally start by looking at the first element and move to the next until you find a match O(n). If you want to make it faster, you can sort the array first and do a binary search.
+
+While this improves the speed of lookup, it also makes insertion of new values very slow, because you will have to move around the existing values in order to keep the array sorted.
+
+This problem is solved by using a hash table.
+
+Other terms for a hash table are:
+
+- dictionary
+- map
+- associative array
+- symbol table
+
+## Example Use Cases
+
+Use hash tables when you need fast access and insertion to your collection, and the order of the elements is not important e.g. student records mapped to their id's.
+
+The [set data structure](https://dsa-cheatsheet.vercel.app/data-structures/set) is also implemented using a hash table instead of a regular array, to improve the time complexity of its operations. That means use cases of set are also use cases of hash table.
+
+A common programming exercise that is solved nicely with a hash table is counting the frequency of words, given a phrase or paragraph. The key is the word and the value is the frequency.
+
+## Hash Table Concepts
+
+### 1. Hash function
+
+Hash table works by accepting a key input and running it through a hash function. The hash function maps the input value to a hash value (which is a number). The hash number is usually the index in the array.
+
+A hash function should consistently return the same value when given the same input, as well as map different input values to different hashes.
+
+### 2. Collision
+
+A collision happens when the hash function assigns two different values to the same hash number.
+
+## Hash Table Methods
+
+1. has(key) - returns a boolean asserting whether a value has been associated to the key in the hash table or not.
+2. set(key, value) - sets the value for the key in the hash table.
+3. get(key) - returns the value associated to the key, or undefined if there is none.
+4. delete(key) - removes the specified element. Returns a boolean that asserts whether it was successfully removed or not.
+5. size - returns the number of key/value pairs in the hash table.
+6. clear() - removes all key-value pairs from the hash table.
+7. values() - an iteration method that returns the values for each element in the hash table, ordered by insertion.
+8. keys() - an iteration method that contains the keys for each element in the hash table, ordered by insertion.
+9. entries() - an iteration method that contains an array of [key, value] for each element in the hash table, ordered by insertion.
+10. forEach(callbackfn) - an iteration method that executes the provided function once for each key-value pair in the hash table, ordered by insertion.
+
+JavaScript has a built-in Map object, which contains all of the methods above (map.size in JS is a number property and not a method).
+
+## Hash Table Implementation in TypeScript
+
+Not needed irl because JavaScript has a Map object, but it's useful to understand under the hood.
