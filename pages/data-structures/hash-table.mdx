@@ -23,7 +23,7 @@ Use hash tables when you need fast access and insertion to your collection, and 
 
 The [set data structure](https://dsa-cheatsheet.vercel.app/data-structures/set) is also implemented using a hash table instead of a regular array, to improve the time complexity of its operations. That means use cases of set are also use cases of hash table.
 
-A common programming exercise that is solved nicely with a hash table is counting the frequency of words, given a phrase or paragraph. The key is the word and the value is the frequency.
+A common programming exercise that is solved with a hash table is counting the frequency of words, given a phrase or paragraph. The key is the word and the value is the frequency.
 
 ## Hash Table Concepts
 
@@ -35,23 +35,116 @@ A hash function should consistently return the same value when given the same in
 
 ### 2. Collision
 
-A collision happens when the hash function assigns two different values to the same hash number.
+A collision happens when the hash function assigns two different key inputs to the same hash number. Hash functions should be well-written to avoid collision.
+
+One way to avoid collision is by storing the key-value pairs in an array first (where the first element is the key and the second element is the value) and then storing that array at the index. The array that holds the key-value pairs that are stored in the same index is usually called a "bucket".
+
+When you perform a lookup for a pair, you'll iterate through the bucket to find the pair that you're looking for.
 
 ## Hash Table Methods
 
 1. has(key) - returns a boolean asserting whether a value has been associated to the key in the hash table or not.
-2. set(key, value) - sets the value for the key in the hash table.
+2. set(key, value) - sets the value for the key in the hash table. Returns the hash table object with the added key-value pair.
 3. get(key) - returns the value associated to the key, or undefined if there is none.
 4. delete(key) - removes the specified element. Returns a boolean that asserts whether it was successfully removed or not.
 5. size - returns the number of key/value pairs in the hash table.
-6. clear() - removes all key-value pairs from the hash table.
-7. values() - an iteration method that returns the values for each element in the hash table, ordered by insertion.
-8. keys() - an iteration method that contains the keys for each element in the hash table, ordered by insertion.
-9. entries() - an iteration method that contains an array of [key, value] for each element in the hash table, ordered by insertion.
-10. forEach(callbackfn) - an iteration method that executes the provided function once for each key-value pair in the hash table, ordered by insertion.
 
-JavaScript has a built-in Map object, which contains all of the methods above (map.size in JS is a number property and not a method).
+JavaScript ES6 (ES2015) has a built-in Map object, which is more useful than a regular JavaScript object, because it contains all of the methods above, and more (map.size in ES6 is a number property and not a method). In addition, it accepts any type for the keys instead of just strings and numbers.
 
-## Hash Table Implementation in TypeScript
+## Simple Hash Table Implementation in TypeScript
 
-Not needed irl because JavaScript has a Map object, but it's useful to understand under the hood.
+Not needed irl because JavaScript has a Map object, but it's useful to see how the methods are implemented at a basic level to understand under the hood.
+
+```typescript
+interface IHashTable<T> {
+    has(key: string): boolean;
+    set(key: string, value: T): this;
+    get(key: string): T | undefined;
+    delete(key: string): boolean;
+}
+
+type HashTablePair<T> = [string, T];
+
+class HashTable<T> implements IHashTable<T> {
+    private table: HashTablePair<T>[][] = [];
+    size: number = 0;
+
+    constructor(initialItems: HashTablePair<T>[], size: number) {
+        this.table = new Array(size);
+        initialItems.forEach(pair => {
+            this.size++;
+            this.set(pair[0], pair[1]);
+        });
+    }
+
+    private getHash(key: string, tableSize: number): number {
+        // one way to implement a hash function is to get the character code of each character in the string
+        let hash = 0;
+        for (let i = 0; i < key.length; i++) {
+            hash += key.charCodeAt(i);
+        }
+        return hash % tableSize;  // use modulo operator to solve the problem of the hash getting too big
+    }
+
+    has(key: string): boolean {
+        const index = this.getHash(key, this.table.length);
+        if (!!this.table[index]) {
+            if (this.table[index].find((pair: any) => pair[0] === key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    set(key: string, value: T): this {
+        const index = this.getHash(key, this.table.length);
+        if (this.table[index]) {
+            this.table[index].push([key, value]);
+        } else {
+            this.table[index] = [[key, value]];
+        }
+        this.size++;
+        return this;
+    }
+
+    get(key: string): T | undefined {
+        const index = this.getHash(key, this.table.length);
+        if (this.table[index].length > 0) {
+            // performing a find() method makes the worst case scenario's time complexity O(n), which happens if all items had a collision and are stored in the same bucket
+            const pair = this.table[index].find((pair: any) => pair[0] === key);
+            if (pair) {
+                return pair[1];
+            }
+        }
+        return undefined;
+    }
+
+    delete(key: string): boolean {
+        const index = this.getHash(key, this.table.length);
+        for (let i = 0; i < this.table.length; i++) {
+            if (this.table[index][i][0] === key) {
+                this.table[index][i] = [] as unknown as HashTablePair<T>;
+                this.size--;
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+This is a basic implementation. It only accepts string type as a key to keep things simple, because there are different ways to implement a hash function, and the correct implementation depends on the type of your keys.
+
+You would also rarely need an object as a key. If you want to use an object as a key and hash it, it's often better to find what makes the object unique and use that as key instead.
+
+This implementation's constructor also accepts a hash table size as a parameter to keep things simple. You can improve this by making the hash table size dynamic, and make the size parameter optional.
+
+One way to do this is to calculate the load factor whenever you insert a new item anywhere. The load factor is the number of items divided by the hash table's length.
+
+If the load factor is over a certain number, let's say 0.9 means the table size is 90% full, then resize the table. Keep in mind that the hash function takes in the table's size as a parameter, which means the hash will no longer be consistent after resizing.
+
+You can simply solve this by re-hashing every item after every resize of the table. That means resizing can get expensive.
+
+Maybe when I have the time, I'll include that in the implementation as well. But if you're feeling like a tinkerer, feel free to play around and implement it yourself ;)
+
+TODO implement dynamic size

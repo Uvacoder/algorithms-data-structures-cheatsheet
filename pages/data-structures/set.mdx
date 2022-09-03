@@ -12,11 +12,9 @@ Eliminating duplicates, checking the presence of an item in a collection, compar
 2. add(item) - inserts a new element if the specified value isn't already in the set. Returns the set object with the added value.
 3. delete(item) - removes the specified element. Returns a boolean that asserts whether it was successfully removed or not.
 4. values() - an iteration method that returns all elements in the set, ordered by insertion.
-5. clear() - removes all elements from the set.
-6. size - returns the number of values in the set.
-7. forEach(callbackfn) - an iteration method that executes the provided function once for each value in the set.
+5. size - returns the number of values in the set.
 
-JavaScript ES6 (ES2015) has a built-in Set object, which contains all of the methods above (set.size in ES6 is a number property and not a method).
+JavaScript ES6 (ES2015) has a built-in Set object, which contains all of the methods above, and more (set.size in ES6 is a number property and not a method).
 
 However, it does not have all of the common methods that are expected from a set data structure, such as the following:
 
@@ -34,9 +32,6 @@ interface ISet<T> {
     has(item: T): boolean;
     add(item: T): this;
     delete(item: T): boolean;
-    clear(): undefined;
-    values(): IterableIterator<T>;
-    forEach(callbackfn: (value: T, value2: T, set: ISet<T>) => void, thisArg?: any): void;
 }
 
 class SetExt<T> implements ISet<T> {
@@ -71,22 +66,6 @@ class SetExt<T> implements ISet<T> {
             return false;
         }
     }
-
-    clear(): undefined {
-        this.items = [];
-        this.size = 0;
-        return undefined;
-    }
-
-    values(): IterableIterator<T> {
-        return this.items.values();
-    }
-
-    forEach(callbackfn: (value: T, value2: T, set: ISet<T>) => void, thisArg?: any): void {
-        for (const element of this.values()) {
-            callbackfn.call(thisArg, element, element, this);
-        }
-    }
 }
 ```
 
@@ -104,7 +83,9 @@ The implementation above uses array methods such as `indexOf()` for lookup, whic
 
 ## TODO A More Optimized Implementation of Set Using Hash Table
 
-In this implementation, we'll use hash table instead of a simple array, so that the basic operations' run-time complexity is constant O(1) instead of linear O(n). 
+In this implementation, we'll use hash table instead of a simple array, so that the basic operations' run-time complexity is constant O(1) instead of linear O(n).
+
+This uses JavaScript's Map object for the hash table. You can refer to [hash table example](https://dsa-cheatsheet.vercel.app/data-structures/hash-table) to get an idea of how a simple hash table works under the hood.
 
 TODO optimized implementation using hash table
 
