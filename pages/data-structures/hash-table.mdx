@@ -69,10 +69,9 @@ class HashTable<T> implements IHashTable<T> {
     private table: HashTablePair<T>[][] = [];
     size: number = 0;
 
-    constructor(initialItems: HashTablePair<T>[], size: number) {
-        this.table = new Array(size);
+    constructor(initialItems: HashTablePair<T>[], maxSize: number) {
+        this.table = new Array(maxSize);
         initialItems.forEach(pair => {
-            this.size++;
             this.set(pair[0], pair[1]);
         });
     }
@@ -81,35 +80,36 @@ class HashTable<T> implements IHashTable<T> {
         // one way to implement a hash function is to get the character code of each character in the string
         let hash = 0;
         for (let i = 0; i < key.length; i++) {
-            hash += key.charCodeAt(i);
+            hash += key.charCodeAt(i); // use modulo operator to solve the problem of the hash getting too big
         }
-        return hash % tableSize;  // use modulo operator to solve the problem of the hash getting too big
+        return hash % tableSize;
     }
 
     has(key: string): boolean {
         const index = this.getHash(key, this.table.length);
         if (!!this.table[index]) {
-            if (this.table[index].find((pair: any) => pair[0] === key)) {
-                return true;
-            }
+            return !!this.table[index].find((pair: any) => pair[0] === key);
         }
         return false;
     }
 
     set(key: string, value: T): this {
-        const index = this.getHash(key, this.table.length);
-        if (this.table[index]) {
-            this.table[index].push([key, value]);
-        } else {
-            this.table[index] = [[key, value]];
+        if (!this.has(key)) {
+            const index = this.getHash(key, this.table.length);
+            if (this.table[index]) {
+                this.table[index].push([key, value]);
+            } else {
+                this.table[index] = [[key, value]];
+            }
+            this.size++;
         }
-        this.size++;
+        
         return this;
     }
 
     get(key: string): T | undefined {
         const index = this.getHash(key, this.table.length);
-        if (this.table[index].length > 0) {
+        if (!!this.table[index]) {
             // performing a find() method makes the worst case scenario's time complexity O(n), which happens if all items had a collision and are stored in the same bucket
             const pair = this.table[index].find((pair: any) => pair[0] === key);
             if (pair) {
