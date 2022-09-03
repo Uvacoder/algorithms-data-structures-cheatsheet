@@ -88,22 +88,26 @@ class HashTable<T> implements IHashTable<T> {
     has(key: string): boolean {
         const index = this.getHash(key, this.table.length);
         if (!!this.table[index]) {
-            return !!this.table[index].find((pair: any) => pair[0] === key);
+            return !!this.table[index].find((pair: HashTablePair<T>) => pair[0] === key);
         }
         return false;
     }
 
     set(key: string, value: T): this {
         if (!this.has(key)) {
-            const index = this.getHash(key, this.table.length);
-            if (this.table[index]) {
-                this.table[index].push([key, value]);
-            } else {
-                this.table[index] = [[key, value]];
-            }
             this.size++;
         }
-        
+        const index = this.getHash(key, this.table.length);
+        if (this.table[index]) {
+            const pair = this.table[index].find(pair => pair[0] === key);
+            if (!!pair) {
+                pair[1] = value;
+            } else {
+              this.table[index].push([key, value]);
+            }
+        } else {
+            this.table[index] = [[key, value]];
+        }          
         return this;
     }
 
@@ -111,7 +115,7 @@ class HashTable<T> implements IHashTable<T> {
         const index = this.getHash(key, this.table.length);
         if (!!this.table[index]) {
             // performing a find() method makes the worst case scenario's time complexity O(n), which happens if all items had a collision and are stored in the same bucket
-            const pair = this.table[index].find((pair: any) => pair[0] === key);
+            const pair = this.table[index].find((pair: HashTablePair<T>) => pair[0] === key);
             if (pair) {
                 return pair[1];
             }
