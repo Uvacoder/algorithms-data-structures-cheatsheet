@@ -16,15 +16,11 @@ Eliminating duplicates, checking the presence of an item in a collection, compar
 
 JavaScript ES6 (ES2015) has a built-in Set object, which contains all of the methods above, and more (set.size in ES6 is a number property and not a method).
 
-However, it does not have all of the common methods that are expected from a set data structure, such as the following:
-
-1. union - returns the combined values of two sets.
-2. intersection - returns a new set that contains the common elements in two sets.
-3. difference - returns a new set that contains elements from the first set which are not in the second set.
-4. symmetricDifference - returns a new set that contains elements from the first set which are not present in the second set, and elements of the second set which are not present in the first set.
-5. isSuperSet - checks if all elements of subset are present in the set.
+However, it does not have all of the common methods that are expected from a set data structure, such as union, intersection, difference, symmetricDifference, isSuperSet.
 
 ## Set Data Structure Implementation in TypeScript
+
+Not needed irl because JavaScript has a built-in Set object, but it's useful to see how the methods are implemented at a basic level to understand under the hood.
 
 ```typescript
 interface ISet<T> {
@@ -69,26 +65,140 @@ class SetExt<T> implements ISet<T> {
 }
 ```
 
-Using the Set class above, we can create a new set using:
-
-```typescript
-interface Person {
-    name: string;
-    age: number;
-}
-const set = new SetExt<Person>([{ name: "Karla", age: 26 }]);
-```
-
 The implementation above uses array methods such as `indexOf()` for lookup, which has a linear time complexity O(n). Thus, the above implementation can be improved for performance by using hash tables instead of regular arrays to store the collection. 
 
-## TODO A More Optimized Implementation of Set Using Hash Table
+You can refer to [hash table](https://dsa-cheatsheet.vercel.app/data-structures/hash-table) to get an idea of how a hash table works.
 
-In this implementation, we'll use hash table instead of a simple array, so that the basic operations' run-time complexity is constant O(1) instead of linear O(n).
+## Extending the JavaScript Set Object
 
-This uses JavaScript's Map object for the hash table. You can refer to [hash table example](https://dsa-cheatsheet.vercel.app/data-structures/hash-table) to get an idea of how a simple hash table works under the hood.
+We mentioned earlier that the built-in JavaScript Set object does not have support for the common methods that you'd expect from a set data structure, such as:
 
-TODO optimized implementation using hash table
+1. union - returns the combined values of two sets.
+2. intersection - returns a new set that contains the common elements in two sets.
+3. difference - returns a new set that contains elements from the first set which are not in the second set.
+4. symmetricDifference - returns a new set that contains elements from the first set which are not present in the second set, and elements of the second set which are not present in the first set.
+5. isSuperSet - checks if all elements of subset are present in the set.
 
-TODO union, intersection, difference, symmetricDifference, isSuperSet methods
+This time, we'll extend the Set interface and implement these missing methods. Take not that extending the Set interface allows us to use the built-in Set object methods this time.
 
-TODO finish hash table data structure page, and link from here.
+```typescript
+interface ISet<T> extends Set<T> {
+    size: number;
+    has(item: T): boolean;
+    add(item: T): this;
+    delete(item: T): boolean;
+    union(otherSet: ISet<T>): SetExt<T>;
+    intersection(otherSet: ISet<T>): SetExt<T>;
+    difference(otherSet: ISet<T>): SetExt<T>;
+    symmetricDifference(otherSet: ISet<T>): SetExt<T>;
+    isSuperSet(subset: ISet<T>): boolean;
+}
+
+class SetExt<T> implements ISet<T> {
+    private items: Set<T> = new Set();
+    size: number = 0;
+
+    constructor(params?: T[]) {
+        if (!!params) {
+            for (let i = 0; i < params.length; i++) {
+                if (!this.items.has((params[i]))) {
+                    this.items.add(params[i]);
+                    this.size++;
+                }
+            }
+        }
+    }
+
+    has(item: T): boolean {
+        return this.items.has(item);
+    }
+    
+    add(item: T): this {
+        this.items.add(item);
+        this.size++;
+        return this;
+    }
+
+    delete(item: T): boolean {
+        if (this.has(item)) {
+            this.size--;
+        }
+        return this.items.delete(item);
+    }
+
+    union(otherSet: ISet<T>): SetExt<T> {
+        const union = new SetExt<T>();
+        this.items.forEach(item => union.add(item));
+        otherSet.forEach(item => union.add(item));
+        return union;
+    }
+
+    intersection(otherSet: ISet<T>): SetExt<T> {
+        const intersection = new SetExt<T>();
+        this.items.forEach(item => {
+            if (otherSet.has(item)) {
+                intersection.add(item);
+            }
+        });
+        return intersection;
+    }
+
+    difference(otherSet: ISet<T>): SetExt<T> {
+        const difference = new SetExt<T>();
+        this.items.forEach(item => {
+            if (!otherSet.has(item)) {
+                difference.add(item);
+            }
+        });
+        return difference;
+    }
+
+    symmetricDifference(otherSet: ISet<T>): SetExt<T> {
+        const difference = new SetExt<T>([...this.items.values()]);
+        otherSet.forEach(item => {
+            if (difference.has(item)) {
+                difference.delete(item);
+            } else {
+                difference.add(item);
+            }
+        });
+        return difference;
+    }
+
+    isSuperSet(subset: ISet<T>): boolean {
+        subset.forEach(item => {
+            if (!this.items.has(item)) {
+                return false;
+            }
+        });
+        return true;
+    }
+
+    /* because we're extending the Set object, we must define the other Set methods to satisfy the Set interface */
+    [Symbol.iterator]() {
+        return this.items.values();
+    }
+
+    [Symbol.toStringTag] = this.items.toString();
+
+    values(): IterableIterator<T> {
+        return this.items.values();
+    }
+
+    forEach(callbackfn: (value: T, value2: T, set: Set<T>) => void, thisArg?: any): void {
+        return this.items.forEach(callbackfn, thisArg);
+    }
+
+    keys(): IterableIterator<T> {
+        return this.items.keys();
+    }
+
+    entries(): IterableIterator<[T, T]> {
+        return this.items.entries();
+    }
+
+    clear(): void {
+        return this.items.clear();
+    }
+}
+```
