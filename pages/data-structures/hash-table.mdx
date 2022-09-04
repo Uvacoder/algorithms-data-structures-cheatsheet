@@ -23,7 +23,30 @@ Use hash tables when you need fast access and insertion to your collection, and 
 
 The [set data structure](https://dsa-cheatsheet.vercel.app/data-structures/set) is also implemented using a hash table instead of a regular array, to improve the time complexity of its operations. That means use cases of set are also use cases of hash table.
 
-A common programming exercise that is solved with a hash table is counting the frequency of words, given a phrase or paragraph. The key is the word and the value is the frequency.
+A simple programming exercise that can be solved with a hash table is counting the frequency of every word, given a phrase or paragraph. The word is the key and the frequency is the value. However, this simple problem can also be solved with a regular reduce function and fewer lines.
+
+A better example problem is the [Two Sum problem on LeetCode](https://leetcode.com/problems/two-sum/).
+
+## Two Sum Problem TypeScript Example
+
+The [Two Sum problem](https://leetcode.com/problems/two-sum/) can be solved with a brute-force method using a loop within a loop, but the time complexity would then be quadratic.
+
+By using a hash table, this can be significantly reduced to linear.
+
+
+```typescript
+function getTwoSum(arr: number[], target: number): number[] | null {
+    const map = new Map<number, number>();
+    for (let i = 0; i < arr.length; i++) {
+        const complement = target - arr[i];
+        if (map.has(complement)) {
+            return [map.get(complement) as number, i]
+        }
+        map.set(arr[i], i);
+    }
+    return null;
+}
+```
 
 ## Hash Table Concepts
 
@@ -125,7 +148,8 @@ class HashTable<T> implements IHashTable<T> {
 
     delete(key: string): boolean {
         const index = this.getHash(key, this.table.length);
-        for (let i = 0; i < this.table.length; i++) {
+        // performing a for loop makes the worst case scenario's time complexity O(n), which happens if all items had a collision and are stored in the same bucket
+        for (let i = 0; i < this.table[index].length; i++) {
             if (this.table[index][i][0] === key) {
                 this.table[index][i] = [] as unknown as HashTablePair<T>;
                 this.size--;
@@ -149,6 +173,8 @@ If the load factor is over a certain number, let's say 0.9 means the table size 
 
 You can simply solve this by re-hashing every item after every resize of the table. That means resizing can get expensive.
 
-Maybe when I have the time, I'll include that in the implementation as well. But if you're feeling like a tinkerer, feel free to play around and implement it yourself ;)
+And the best improvement for this implementation in terms of optimization is using a linked list for the bucket arrays instead of a regular array. Then it will truly make the operations' time complexity constant O(1).
 
-TODO implement dynamic size
+When I have the time, I'll include these in the implementation as well. But if you're feeling like a tinkerer, feel free to play around and implement it yourself ;)
+
+TODO implement dynamic size and linked list buckets
