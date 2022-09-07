@@ -33,20 +33,218 @@ We even used a linked list to implement the [queue data structure](https://dsa-c
 
 Since we're talking heavily about JavaScript and TypeScript in this site, we should also know that the DOM uses linked lists to store nodes.
 
-GPS Navigation: A linked list of map data. Travelling from origin to destination is example of traversing through all nodes. Rerouting by a GPS is an example of Add and Remove operations of map data.
+In theory, GPS navigation is also a nice use case, by using a linked list for the map data. Finding your way from your starting point to your destination means you have to go through all nodes. Re-routing makes use of adding and deleting map data from the linked list.
 
 ## Linked List Methods
 
 1. add(element) - appends the element to the end of the list.
 2. insertAt(element, index) - inserts the element at the given index in the list.
-3. remove(element) - returns and removes element in the list.
-4. removeFrom(index) - returns and removes the element at the given index in the list.
+3. remove(element) -  removes element in the list, and returns a boolean that asserts whether it was successfully removed of not.
+4. removeFrom(index) - removes the element at the given index in the list, and returns a boolean that asserts whether it was successfully removed of not.
 5. indexOf(element) - returns the index of a given element if it's in the list. Otherwise it returns -1;
-6. getFirst - returns the head or first element in the list.
-7. getLast - returns the tail or last element in the list.
-8. size - returns the length of the linked list.
-9. clear - empties out the list.
+6. elementAt(index) - returns the element at the given index in the list.
+7. getFirst - returns the head or first element in the list.
+8. getLast - returns the tail or last element in the list.
+9. size - returns the length of the linked list.
+10. clear - empties out the list.
 
-## Linked List Implementation in TypeScript
+## Linked List TypeScript Implementation
 
-// TODO linked list implementation
+```typescript
+interface ILinkedList<T> {
+    add(element: T): void;
+    insertAt(element: T, index: number): void;
+    remove(element: T): boolean;
+    removeFrom(index: number): boolean;
+    indexOf(element: T): number;
+    elementAt(index: number): LinkedListNode<T> | null;
+    getFirst(): LinkedListNode<T> | null;
+    getLast(): LinkedListNode<T> | null;
+    size: number;
+    clear(): void;
+}
+
+class LinkedListNode<T> {
+    element: LinkedListNode<T> | null;
+    next: LinkedListNode<T> | null;
+
+    constructor(element: T) {
+        this.element = element as LinkedListNode<T>;
+        this.next = null;
+    }
+}
+
+class LinkedList<T> implements ILinkedList<T> {
+    private head: LinkedListNode<T> | null;
+    size: number;
+
+    constructor() {
+        this.head = null;
+        this.size = 0;
+    }
+
+    add(element: T): void {
+        const node = new LinkedListNode<T>(element);
+
+        if (!this.head) { // list is empty
+            this.head = node;
+        } else {
+            // start at the beginning and go through each element in the list
+            let currentNode: LinkedListNode<T> = this.head;
+            while(currentNode.next) {
+                currentNode = currentNode.next;
+            }
+
+            // finally at the end of the list, add the node
+            currentNode.next = node;
+        }
+        this.size++;
+    }
+
+    insertAt(element: T, index: number): void {
+        let node = new LinkedListNode<T>(element);
+        let currentNode: LinkedListNode<T> | null = this.head;
+
+        // add the element to the first index if index is 0
+        if (index === 0) {
+            node.next = this.head;
+            this.head = node;
+        } else {
+            currentNode = this.head;
+            let iterator: number = 0;
+            let prevNode: LinkedListNode<T> | null = null;
+
+            // iterate over list to find the place to insert
+            while (iterator < index) {
+                prevNode = currentNode;
+                currentNode = currentNode!.next;
+                iterator++;
+            }
+
+            // add the element by pointing the next of the new node to the current node,
+            // and pointing the next of the previous node to the new node
+            node.next = currentNode;
+            prevNode!.next = node;
+        }
+        this.size++;
+    }
+
+    remove(element: T): boolean {
+        let currentNode: LinkedListNode<T> | null = this.head;
+        let prevNode: LinkedListNode<T> | null = null;
+
+        // iterate over the list
+        while (currentNode !== null) {
+            if (currentNode.element === element) {
+                if (prevNode === null) {
+                    // specified element to remove is the head because prevNode has not been assigned yet so it's null, so just assign the next node as the new head
+                    this.head = currentNode.next;
+                } else {
+                    // remove next pointer to the specified element to remove, by skipping over it and point to the next one instead
+                    prevNode.next = currentNode.next;
+                }
+                this.size--;
+                return true;
+            }
+            prevNode = currentNode;
+            currentNode = currentNode.next;
+        }
+        return false;
+    }
+
+    removeFrom(index: number): boolean {
+        if (index < 0 || index >= this.size) {
+            return false;
+        }
+        
+        let currentNode: LinkedListNode<T> | null = this.head;
+        if (index === 0) {
+            this.head = currentNode!.next;
+        } else {
+            let iterator: number = 0;
+            let prevNode: LinkedListNode<T> | null = currentNode;
+
+            while (iterator < index) {
+                prevNode = currentNode;
+                currentNode = currentNode!.next;
+                iterator++;
+            }
+
+            // finally remove the element by moving the next pointer of the previous node to the next element
+            prevNode!.next = currentNode!.next;
+        }
+        this.size--;
+        return true;
+    }
+
+    indexOf(element: T): number {
+        let count: number = 0;
+        let currentNode: LinkedListNode<T> | null = this.head;
+
+        while (currentNode !== null) {
+            if (currentNode.element === element) {
+                return count;
+            }
+            currentNode = currentNode.next;
+            count++;
+        }
+
+        return -1;
+    }
+
+    elementAt(index: number): LinkedListNode<T> | null {
+        let currentNode: LinkedListNode<T> | null = this.head;
+
+        if (index < 0 || index >= this.size) {
+            return null;
+        }
+
+        if (index === 0) {
+            return currentNode!.element;
+        }
+        
+        let iterator: number = 0;
+
+        while (iterator < index) {
+            currentNode = currentNode!.next;
+            iterator++;
+        }
+        return currentNode!.element;
+    }
+
+    getFirst(): LinkedListNode<T> | null {
+        if (!!this.head?.element) {
+            return this.head.element;
+        } else {
+            return null;
+        }
+    }
+
+    getLast(): LinkedListNode<T> | null {
+        if (this.size === 0) {
+            return null;
+        }
+        if (this.size === 1) {
+            if (!!this.head?.element) {
+                return this.head.element;
+            } else {
+                return null;
+            }
+        }
+        let count: number = 0;
+        let currentNode: LinkedListNode<T> | null = this.head;
+        let prevNode: LinkedListNode<T> | null = null;
+
+        while (count < this.size) {
+            prevNode = currentNode;
+            currentNode = currentNode?.next || null;
+            count++;
+        }
+        return prevNode?.element || null;
+    }
+
+    clear(): void {
+        this.head = null;
+    }
+}
+```
