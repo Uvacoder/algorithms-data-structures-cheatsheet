@@ -12,14 +12,13 @@ The most common use case is when a resource is shared by multiple "consumers" (C
 
 ## Queue Methods
 
-1. print() - helper method that logs the collection.
-2. enqueue(item) - pushes an item to the end of the queue.
-3. dequeue() - removes and returns the first item from the queue.
-4. front() - returns the first item, without removing it from the queue.
-5. size
-6. isEmpty()
+1. enqueue(item) - pushes an item to the end of the queue.
+2. dequeue() - removes and returns the first item from the queue.
+3. front() - returns the first item, without removing it from the queue.
+4. size
+5. isEmpty()
 
-## TODO Queue Data Structure Implementation in TypeScript
+## Queue Data Structure Implementation in TypeScript
 
 Just like the [set data structure example](https://dsa-cheatsheet.vercel.app/data-structures/set), a queue can be implemented in TypeScript using an array. But again, the performance will have issues with an array implementation.
 
@@ -27,7 +26,50 @@ With an array implementation, you'll have a constant time complexity O(1) for ac
 
 So I will skip the array version for queue, and instead go straight to a linked list implementation.
 
-You can refer to [linked list](https://dsa-cheatsheet.vercel.app/data-structures/linked-list) to get an idea of how a linked list works.
+You can refer to [linked list](https://dsa-cheatsheet.vercel.app/data-structures/linked-list) to get an idea of how a linked list works, as well as the LinkedList class we'll use below.
+
+```typescript
+interface IQueue<T> {
+    enqueue(item: T): void;
+    dequeue(): T | null;
+    front(): T | null;
+    isEmpty(): boolean;
+    size: number;
+}
+
+class Queue<T> implements IQueue<T> {
+    private items: LinkedList<T>;
+    size: number;
+
+    constructor() {
+        this.items = new LinkedList<T>();
+        this.size = 0;
+    }
+
+    enqueue(item: T): void {
+        this.items.insertAt(item, this.size);
+        this.size++;
+    }
+
+    dequeue(): T | null {
+        const tail = this.items.getLast() as T;
+        if (!!tail) {
+            this.items.remove(tail);
+            this.size--;
+            return tail;
+        }
+        return null;
+    }
+
+    front(): T | null {
+        return this.items.getFirst() as T;
+    }
+
+    isEmpty(): boolean {
+        return this.size === 0;
+    }
+}
+```
 
 ## TODO Priority Queue Data Structure Implementation in TypeScript
 
