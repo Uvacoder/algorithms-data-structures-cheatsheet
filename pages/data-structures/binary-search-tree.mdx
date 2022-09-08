@@ -2,9 +2,9 @@
 
 Just like [linked list](https://dsa-cheatsheet.vercel.app/data-structures/linked-list), binary search tree is a node-based data structure.
 
-The difference is that each node in a binary search tree has a maximum of two children. All resulting nodes make up the tree.
+The difference is that each node in a binary search tree has a maximum of two children, while a linked list node only has a "next" pointer.
 
-This data structure also has three key properties:
+Binary search tree also has three key properties:
 
 1. The left subtree of a node must only contain nodes with keys that are lesser than the node's key.
 2. The right subtree of a node must only contain nodes with keys that are greater than the node's key.
@@ -12,14 +12,24 @@ This data structure also has three key properties:
 
 Because of these properties of a BST, its operations can skip about half of the tree, instead of having to go through all items until you find your item.
 
-The time complexity of operations is directly proportional to the height of the tree. It allows for binary search, which has a fast search, insertion and deletion of items. On average, the search, insertion and deletion operations take O(log n).
+That makes the time complexity of operations to be directly proportional to the logarithm of the height of the tree. It allows for binary search, which has a fast search, insertion and deletion of items. On average, the search, insertion and deletion operations take O(log n).
 
 Other terms for a binary search tree:
 
 - Ordered binary tree
 - Sorted binary tree
 
+## Binary Search Tree vs. Linked List vs. Hash table
+
+| BST                                                            | Hash Table                                                    | Linked List                                                                       |
+|----------------------------------------------------------------|---------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| Each node can have two sub-nodes                               | Node connections are arbitrary                                | Each node is connected to only one other node, which is the next node in the list |
+| Insertion, deletion, and search have O(log n) time complexity  | Insertion, deletion, and search have O(1) time complexity     | Insertion and deletion have O(1) time complexity, while search has O(n)           |
+| Sorted/ordered                                                 | Not ordered                                                   | Not ordered                                                                       |
+
+## Binary Search Tree Example Use Cases
+
 Binary search trees can be used to implement dynamic [sets](https://dsa-cheatsheet.vercel.app/data-structures/set), lookup tables and priority [queues](https://dsa-cheatsheet.vercel.app/data-structures/queue), and used in sorting algorithms such as tree sort.
 
-// TODO BST vs hash table
-// TODO BST vs linked list
+## Binary Search Tree Methods
+

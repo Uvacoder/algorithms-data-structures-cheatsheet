@@ -6,6 +6,10 @@ Like arrays, hash tables can be used to implement other data structures.
 
 Hash tables are commonly used because of its fast search, insert, and delete operations. The average time complexity for these operations is constant O(1), which is very fast compared to the typical linear time complexity O(n).
 
+[Click here for a comparison](https://dsa-cheatsheet.vercel.app/data-structures/binary-search-tree) between hash table, linked list, and binary search tree data structures.
+
+If you go through the implementation of these three data structures, you'll notice that hash table is different from the rest such that it's implemented with an array.
+
 The use of key-value pairs is what makes hash tables faster compared to a regular array. When looking for a value in an array, you'd normally start by looking at the first element and move to the next until you find a match O(n). If you want to make it faster, you can sort the array first and do a binary search.
 
 While this improves the speed of lookup, it also makes insertion of new values very slow, because you will have to move around the existing values in order to keep the array sorted.
@@ -21,7 +25,11 @@ Other terms for a hash table are:
 
 ## Example Use Cases
 
-Use hash tables when you need fast access and insertion to your collection, and the order of the elements is not important e.g. student records mapped to their id's.
+Use hash tables when you need fast access and insertion to your collection, and the order of the elements is not important, such as:
+
+- student records mapped to their id's
+- address tables
+- password lookups
 
 The [set data structure](https://dsa-cheatsheet.vercel.app/data-structures/set) is also implemented using a hash table instead of a regular array, to improve the time complexity of its operations. That means use cases of set are also use cases of hash table.
 
@@ -60,7 +68,7 @@ A hash function should consistently return the same value when given the same in
 
 ### 2. Collision
 
-A collision happens when the hash function assigns two different key inputs to the same hash number. Hash functions should be well-written to avoid collision.
+A collision happens when the hash function assigns two different key inputs to the same hash number. Hash functions should be well-written to avoid collision. Such hash functions are expensive and difficult to implement.
 
 One way to avoid collision is by storing the key-value pairs in an array first (where the first element is the key and the second element is the value) and then storing that array at the index. The array that holds the key-value pairs that are stored in the same index is usually called a "bucket".
 

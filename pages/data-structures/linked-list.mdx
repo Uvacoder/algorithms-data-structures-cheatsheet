@@ -21,11 +21,13 @@ For example, this is an overview comparison of arrays and linked lists:
 | May result in wasted memory (applies when arrays can only have fixed size)                         | No waste of memory             |
 | Sequential access is faster                                                                        | Sequential access is slower    |
 
+[Click here for a comparison](https://dsa-cheatsheet.vercel.app/data-structures/binary-search-tree) between linked list, hash table, and binary search tree data structures.
+
 ## Example Use Cases
 
 Linked list are used when:
 
-- Handling dynamic data elements due to the dynamic size of the collection
+- Handling dynamic data elements due to the dynamic size of the collection (e.g. dynamic memory allocation)
 - Inserting and deleting elements due to the fast insertion and deletion in the collection
 - You need your elements to point to the next element in the list
 
@@ -248,3 +250,7 @@ class LinkedList<T> implements ILinkedList<T> {
     }
 }
 ```
+
+Notice that nodes can only be accessed sequentially in a linked list collection, which is one disadvantage of this data structure.
+
+Also, the pointers used to point to the next node consumes addition memory, which is another thing to keep in mind.
